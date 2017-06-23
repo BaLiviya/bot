@@ -26,6 +26,8 @@ public class CommandFactory {
                 return new AcceptOrRejectTaskCommand();
             case ADMIN_ACCEPT_OR_REJECT_TASK:
                 return new AdminAcceptOrRejectTaskCommand();
+            case SHOW_THANKS:
+                return new ShowThanksCommand();
             default:
                 throw new NotRealizedMethodException("Not realized for type: " + type);
         }
