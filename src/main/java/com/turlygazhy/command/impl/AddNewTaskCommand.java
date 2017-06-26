@@ -11,13 +11,11 @@ import org.telegram.telegrambots.api.methods.send.SendVoice;
 import org.telegram.telegrambots.api.methods.updatingmessages.EditMessageText;
 import org.telegram.telegrambots.api.objects.Update;
 import org.telegram.telegrambots.api.objects.replykeyboard.InlineKeyboardMarkup;
-import org.telegram.telegrambots.api.objects.replykeyboard.ReplyKeyboard;
 import org.telegram.telegrambots.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 import org.telegram.telegrambots.exceptions.TelegramApiException;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 
@@ -69,7 +67,8 @@ public class AddNewTaskCommand extends Command {
         users = userDao.getUsers(chatId);
 
         if (users.size() == 0) {
-            // TODO: 10-Jun-17 say please add worker
+            sendMessage("Добавьте пожалуйста рабочих.");//todo Marat to DB
+            return true;
         }
 
         sendMessage(78, getWorkersKeyboard(users));// Выберите работника
