@@ -129,6 +129,8 @@ public abstract class Command {
         return keyboard;
     }
 
+    protected ThanksDao thanksDao = factory.getThanksDao();
+
     protected Command() throws SQLException {
     }
 

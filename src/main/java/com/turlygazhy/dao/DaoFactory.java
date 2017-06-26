@@ -100,4 +100,6 @@ public class DaoFactory {
     public ScriptExecutor getScriptExecutor() {
         return new ScriptExecutor(connection);
     }
+
+    public ThanksDao getThanksDao() { return new ThanksDao(connection); }
 }

@@ -13,7 +13,10 @@ public enum CommandType {
     SHOW_WORKERS_MENU(52),
     SHOW_STATISTIC(53),
     ACCEPT_OR_REJECT_TASK(54),
-    ADMIN_ACCEPT_OR_REJECT_TASK(55);
+    ADMIN_ACCEPT_OR_REJECT_TASK(55),
+
+    SHOW_THANKS(56),
+    ADD_NEW_THANKS(57);
 
     private final int id;
 

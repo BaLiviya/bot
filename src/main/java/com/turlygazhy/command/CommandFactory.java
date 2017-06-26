@@ -28,6 +28,8 @@ public class CommandFactory {
                 return new AdminAcceptOrRejectTaskCommand();
             case SHOW_THANKS:
                 return new ShowThanksCommand();
+            case ADD_NEW_THANKS:
+                return new AddNewThanksCommand();
             default:
                 throw new NotRealizedMethodException("Not realized for type: " + type);
         }
