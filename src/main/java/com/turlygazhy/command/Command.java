@@ -26,6 +26,7 @@ import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -61,6 +62,58 @@ public abstract class Command {
 
 
     protected Command() throws SQLException {
+    }
+
+    public InlineKeyboardMarkup getDeadlineKeyboard(int shownDates) {
+        InlineKeyboardMarkup keyboard = new InlineKeyboardMarkup();
+        List<List<InlineKeyboardButton>> rows = new ArrayList<>();
+
+        Date date = new Date();
+        date.setDate(date.getDate() + (shownDates * 9));
+        List<InlineKeyboardButton> row = null;
+        for (int i = 1; i < 10; i++) {
+            if (row == null) {
+                row = new ArrayList<>();
+            }
+            InlineKeyboardButton button = new InlineKeyboardButton();
+            int dateToString = date.getDate();
+            String stringDate;
+            if (dateToString > 9) {
+                stringDate = String.valueOf(dateToString);
+            } else {
+                stringDate = "0" + dateToString;
+            }
+            int monthToString = date.getMonth() + 1;
+            String stringMonth;
+            if (monthToString > 9) {
+                stringMonth = String.valueOf(monthToString);
+            } else {
+                stringMonth = "0" + monthToString;
+            }
+            String dateText = stringDate + "." + stringMonth;
+            button.setText(dateText);
+            button.setCallbackData(dateText);
+            row.add(button);
+            if (i % 3 == 0) {
+                rows.add(row);
+                row = null;
+            }
+            date.setDate(date.getDate() + 1);
+        }
+
+        if (shownDates > 0) {
+            rows.add(getNextPrevRows(true, true));
+        } else {
+            rows.add(getNextPrevRows(false, true));
+        }
+
+
+        keyboard.setKeyboard(rows);
+        return keyboard;
+    }
+
+    public ReplyKeyboard getInlineButton(String text) {
+        return getInlineButton(text, text);
     }
 
     public ReplyKeyboard getInlineButton(String text, String callbackData) {
