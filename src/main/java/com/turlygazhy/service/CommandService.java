@@ -1,6 +1,7 @@
 package com.turlygazhy.service;
 
 import com.turlygazhy.command.Command;
+import com.turlygazhy.command.impl.ChangeExecutorCommand;
 import com.turlygazhy.command.impl.CloseTicketCommand;
 import com.turlygazhy.command.impl.EditTaskCommand;
 import com.turlygazhy.command.impl.ExecuteScriptCommand;
@@ -21,6 +22,10 @@ public class CommandService extends Service {
             String closeText = messageDao.getMessageText(119);
             String editText = messageDao.getMessageText(120);
             String changeExecutorText = messageDao.getMessageText(121);
+            if (text.contains(changeExecutorText)) {
+                int id = Integer.parseInt(text.replace(changeExecutorText, ""));
+                return new ChangeExecutorCommand(id);
+            }
             if (text.contains(closeText)) {
                 int id = Integer.parseInt(text.replace(closeText, ""));
                 return new CloseTicketCommand();

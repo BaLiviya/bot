@@ -68,36 +68,4 @@ public class AcceptOrRejectTaskCommand extends Command {
 
         return false;
     }
-
-    private ReplyKeyboard getAfterRejectedKeyboard(int taskId) throws SQLException {
-        InlineKeyboardMarkup keyboard = new InlineKeyboardMarkup();
-        List<List<InlineKeyboardButton>> rows = new ArrayList<>();
-
-        List<InlineKeyboardButton> row = new ArrayList<>();
-        List<InlineKeyboardButton> row2 = new ArrayList<>();
-
-        InlineKeyboardButton closeButton = new InlineKeyboardButton();
-        String closeText = messageDao.getMessageText(119);
-        closeButton.setText(closeText);
-        closeButton.setCallbackData(closeText + taskId);
-
-        InlineKeyboardButton editButton = new InlineKeyboardButton();
-        String editText = messageDao.getMessageText(120);
-        editButton.setText(editText);
-        editButton.setCallbackData(editText + taskId);
-
-        InlineKeyboardButton changeExecutorButton = new InlineKeyboardButton();
-        String changeExecutorText = messageDao.getMessageText(121);
-        changeExecutorButton.setText(changeExecutorText);
-        changeExecutorButton.setCallbackData(changeExecutorText + taskId);
-
-        row.add(closeButton);
-        row.add(editButton);
-        row2.add(changeExecutorButton);
-        rows.add(row);
-        rows.add(row2);
-
-        keyboard.setKeyboard(rows);
-        return keyboard;
-    }
 }

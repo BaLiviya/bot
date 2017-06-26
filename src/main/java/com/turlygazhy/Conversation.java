@@ -22,10 +22,10 @@ public class Conversation {
             String inputtedText;
             if (updateMessage == null) {
                 inputtedText = update.getCallbackQuery().getData();
-                try {
-                    inputtedText = inputtedText.substring(0, inputtedText.indexOf(" "));
-                } catch (Exception ignored) {
-                }
+//                try {
+//                    inputtedText = inputtedText.substring(0, inputtedText.indexOf(" "));//don't use this line
+//                } catch (Exception ignored) {
+//                }
                 updateMessage = update.getCallbackQuery().getMessage();
             } else {
                 inputtedText = updateMessage.getText();
@@ -40,6 +40,7 @@ public class Conversation {
                 if (command == null) {
                     ShowInfoCommand showInfoCommand = new ShowInfoCommand();
                     int cannotHandleUpdateMessageId = 7;
+                    showInfoCommand.initMessage(update, bot);
                     showInfoCommand.setMessageId(cannotHandleUpdateMessageId);
                     showInfoCommand.execute(update, bot);
                     return;

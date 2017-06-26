@@ -119,7 +119,7 @@ public class TaskDao extends AbstractDao {
         return task;
     }
 
-    public void updateTask(Task task) throws SQLException {//todo Marat апдейтать и текст и аудио и дедлайн
+    public void updateTask(Task task) throws SQLException {//todo Marat апдейтать и текст и аудио и дедлайн и исполнителя
         String UPDATE_TASK = "UPDATE TASK SET STATUS = ?, USER_ID = ?, REPORT = ?, CAUSE = ?, DATE_OF_COMPLETION = ? WHERE ID = ?";
         PreparedStatement ps = connection.prepareStatement(UPDATE_TASK);
         ps.setInt(1, task.getStatus().getId());

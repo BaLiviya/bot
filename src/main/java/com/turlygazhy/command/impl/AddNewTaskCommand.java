@@ -5,17 +5,11 @@ import com.turlygazhy.command.Command;
 import com.turlygazhy.entity.Task;
 import com.turlygazhy.entity.User;
 import com.turlygazhy.entity.WaitingType;
-import org.telegram.telegrambots.api.methods.ParseMode;
-import org.telegram.telegrambots.api.methods.send.SendMessage;
-import org.telegram.telegrambots.api.methods.send.SendVoice;
 import org.telegram.telegrambots.api.methods.updatingmessages.EditMessageText;
 import org.telegram.telegrambots.api.objects.Update;
-import org.telegram.telegrambots.api.objects.replykeyboard.InlineKeyboardMarkup;
-import org.telegram.telegrambots.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 import org.telegram.telegrambots.exceptions.TelegramApiException;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -130,43 +124,8 @@ public class AddNewTaskCommand extends Command {
         task.setDeadline(updateMessageText);
         waitingType = null;
         taskDao.insertTask(task);
-        informExecutor(bot);
+        informExecutor(task);
         sendMessage(79, chatId, bot); // Задание записано
         return true;
-    }
-
-    private void informExecutor(Bot bot) throws SQLException, TelegramApiException { //передача задания
-        StringBuilder sb = new StringBuilder();
-        sendMessage(80, task.getUserId(), bot);
-        if (task.isHasAudio()) {
-            bot.sendVoice(new SendVoice()
-                    .setVoice(task.getVoiceMessageId())
-                    .setChatId(task.getUserId()));
-        } else {
-            sb.append("<b>").append(messageDao.getMessageText(96)).append("</b>").append(task.getText()).append("\n");
-        }
-        sb.append("<b>").append(messageDao.getMessageText(98)).append("</b>").append(task.getDeadline());
-        bot.sendMessage(new SendMessage()
-                .setChatId(task.getUserId())
-                .setText(sb.toString())
-                .setReplyMarkup(getTaskKeyboard())
-                .setParseMode(ParseMode.HTML));
-    }
-
-    private InlineKeyboardMarkup getTaskKeyboard() throws SQLException {
-        InlineKeyboardMarkup keyboard = new InlineKeyboardMarkup();
-        List<List<InlineKeyboardButton>> rows = new ArrayList<>();
-        List<InlineKeyboardButton> row = new ArrayList<>();
-        row.add(new InlineKeyboardButton()
-                .setText(buttonDao.getButtonText(65))   // Accept
-                .setCallbackData(buttonDao.getButtonText(65) + " " + task.getId()));
-        row.add(new InlineKeyboardButton()
-                .setText(buttonDao.getButtonText(66))   // Reject
-                .setCallbackData(buttonDao.getButtonText(66) + " " + task.getId()));
-
-        rows.add(row);
-        keyboard.setKeyboard(rows);
-
-        return keyboard;
     }
 }

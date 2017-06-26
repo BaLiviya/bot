@@ -6,12 +6,14 @@ import com.turlygazhy.dao.GoalDao;
 import com.turlygazhy.dao.ScriptExecutor;
 import com.turlygazhy.dao.impl.*;
 import com.turlygazhy.entity.Message;
+import com.turlygazhy.entity.Task;
 import com.turlygazhy.entity.User;
 import com.turlygazhy.entity.WaitingType;
 import org.telegram.telegrambots.api.methods.ParseMode;
 import org.telegram.telegrambots.api.methods.send.SendContact;
 import org.telegram.telegrambots.api.methods.send.SendMessage;
 import org.telegram.telegrambots.api.methods.send.SendPhoto;
+import org.telegram.telegrambots.api.methods.send.SendVoice;
 import org.telegram.telegrambots.api.methods.updatingmessages.EditMessageText;
 import org.telegram.telegrambots.api.objects.CallbackQuery;
 import org.telegram.telegrambots.api.objects.Contact;
@@ -60,6 +62,72 @@ public abstract class Command {
     private Bot bot;
     protected String editText = messageDao.getMessageText(120);
 
+    public ReplyKeyboard getAfterRejectedKeyboard(int taskId) throws SQLException {
+        InlineKeyboardMarkup keyboard = new InlineKeyboardMarkup();
+        List<List<InlineKeyboardButton>> rows = new ArrayList<>();
+
+        List<InlineKeyboardButton> row = new ArrayList<>();
+        List<InlineKeyboardButton> row2 = new ArrayList<>();
+
+        InlineKeyboardButton closeButton = new InlineKeyboardButton();
+        String closeText = messageDao.getMessageText(119);
+        closeButton.setText(closeText);
+        closeButton.setCallbackData(closeText + taskId);
+
+        InlineKeyboardButton editButton = new InlineKeyboardButton();
+        String editText = messageDao.getMessageText(120);
+        editButton.setText(editText);
+        editButton.setCallbackData(editText + taskId);
+
+        InlineKeyboardButton changeExecutorButton = new InlineKeyboardButton();
+        String changeExecutorText = messageDao.getMessageText(121);
+        changeExecutorButton.setText(changeExecutorText);
+        changeExecutorButton.setCallbackData(changeExecutorText + taskId);
+
+        row.add(closeButton);
+        row.add(editButton);
+        row2.add(changeExecutorButton);
+        rows.add(row);
+        rows.add(row2);
+
+        keyboard.setKeyboard(rows);
+        return keyboard;
+    }
+
+    public void informExecutor(Task task) throws SQLException, TelegramApiException { //передача задания
+        StringBuilder sb = new StringBuilder();
+        sendMessage(80, task.getUserId(), bot);
+        if (task.isHasAudio()) {
+            bot.sendVoice(new SendVoice()
+                    .setVoice(task.getVoiceMessageId())
+                    .setChatId(task.getUserId()));
+        } else {
+            sb.append("<b>").append(messageDao.getMessageText(96)).append("</b>").append(task.getText()).append("\n");
+        }
+        sb.append("<b>").append(messageDao.getMessageText(98)).append("</b>").append(task.getDeadline());
+        bot.sendMessage(new SendMessage()
+                .setChatId(task.getUserId())
+                .setText(sb.toString())
+                .setReplyMarkup(getTaskKeyboard(task))
+                .setParseMode(ParseMode.HTML));
+    }
+
+    public InlineKeyboardMarkup getTaskKeyboard(Task task) throws SQLException {
+        InlineKeyboardMarkup keyboard = new InlineKeyboardMarkup();
+        List<List<InlineKeyboardButton>> rows = new ArrayList<>();
+        List<InlineKeyboardButton> row = new ArrayList<>();
+        row.add(new InlineKeyboardButton()
+                .setText(buttonDao.getButtonText(65))   // Accept
+                .setCallbackData(buttonDao.getButtonText(65) + " " + task.getId()));
+        row.add(new InlineKeyboardButton()
+                .setText(buttonDao.getButtonText(66))   // Reject
+                .setCallbackData(buttonDao.getButtonText(66) + " " + task.getId()));
+
+        rows.add(row);
+        keyboard.setKeyboard(rows);
+
+        return keyboard;
+    }
 
     protected Command() throws SQLException {
     }
