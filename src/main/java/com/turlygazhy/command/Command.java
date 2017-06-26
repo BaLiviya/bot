@@ -57,8 +57,25 @@ public abstract class Command {
     protected String updateMessageText;
     protected Long chatId;
     private Bot bot;
+    protected String editText = messageDao.getMessageText(120);
+
 
     protected Command() throws SQLException {
+    }
+
+    public ReplyKeyboard getInlineButton(String text, String callbackData) {
+        InlineKeyboardMarkup keyboard = new InlineKeyboardMarkup();
+        List<List<InlineKeyboardButton>> rows = new ArrayList<>();
+        List<InlineKeyboardButton> row = new ArrayList<>();
+        InlineKeyboardButton button = new InlineKeyboardButton();
+
+        button.setText(text);
+        button.setCallbackData(callbackData);
+
+        row.add(button);
+        rows.add(row);
+        keyboard.setKeyboard(rows);
+        return keyboard;
     }
 
     public void initMessage(Update update, Bot bot) throws TelegramApiException, SQLException {
@@ -135,6 +152,15 @@ public abstract class Command {
                     .setPhoneNumber(contact.getPhoneNumber())
             );
         }
+    }
+
+    public void sendMessage(String text, ReplyKeyboard keyboard) throws TelegramApiException {
+        bot.sendMessage(new SendMessage()
+                .setChatId(chatId)
+                .setText(text)
+                .setReplyMarkup(keyboard)
+                .setParseMode(ParseMode.HTML)
+        );
     }
 
     public ReplyKeyboard getWorkersKeyboard(List<User> users) {
