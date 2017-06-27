@@ -201,8 +201,10 @@ public class ShowTasksCommand extends Command {
         if (updateMessageText.equals(buttonDao.getButtonText(60))) {         // Выполненные
             status = Task.Status.DONE;
         } else if (updateMessageText.equals(buttonDao.getButtonText(61))) {  // Не выполненные
+            status = Task.Status.REJECTED;
+        } else if (updateMessageText.equals(buttonDao.getButtonText(205))) {  // В процессе
             status = Task.Status.DOING;
-        } else if (updateMessageText.equals(buttonDao.getButtonText(10))) {  // Назад
+        }else if (updateMessageText.equals(buttonDao.getButtonText(10))) {  // Назад
             waitingType = WaitingType.CHOOSE_TASK_TYPE;
             sendMessage(114, chatId, bot);          // Выберите
             return false;
