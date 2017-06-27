@@ -54,11 +54,11 @@ public class Bot extends TelegramLongPollingBot {
     }
 
     public String getBotUsername() {
-        return "Personal Assistant";
+        return "dev_zhake_bot";
     }
 
     public String getBotToken() {
-        return "302643839:AAHOsiedpf8bsyCzXETeU0C-ijZGu8v4sN0";//@Stgcfjkyfdthbot
+        return "405718890:AAHr_1a5Fs6OAXYmdsByXBmiffkovU7sbVA";//@Stgcfjkyfdthbot
 //        return "349496686:AAE8N-LZzUuVLVYQrOthfSnOQOKEZfw_vCo";
 //        return "292550349:AAFjomqw9L0X8eMftz0NPVxJ2wh48Vljx84";//bimov_assistant_bot
 //        return "376290788:AAHSivLvfESxnoa0UPdV_QJ0IsAG-H3Tbc8";//@TDNbot
