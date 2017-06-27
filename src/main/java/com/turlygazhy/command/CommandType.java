@@ -9,7 +9,6 @@ public enum CommandType {
     SHOW_INFO(1),
     ADD_NEW_TASK(49),
     SHOW_TASKS(51),
-    SHOW_THANKS(56),
     SHOW_WORKERS_MENU(52),
     SHOW_STATISTIC(53),
     ACCEPT_OR_REJECT_TASK(54),

@@ -61,7 +61,7 @@ public class AddNewTaskCommand extends Command {
         users = userDao.getUsers(chatId);
 
         if (users.size() == 0) {
-            sendMessage("Добавьте пожалуйста рабочих.");//todo Marat to DB
+            sendMessage(127);
             return true;
         }
 

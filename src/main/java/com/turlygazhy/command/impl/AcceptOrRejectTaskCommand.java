@@ -61,7 +61,7 @@ public class AcceptOrRejectTaskCommand extends Command {
                         .setParseMode(ParseMode.HTML)
                         .setReplyMarkup(getAfterRejectedKeyboard(task.getId()))
                 );
-                sendMessage("OK", chatId, bot);
+                sendMessage("Отклонение записано", chatId, bot);
                 taskDao.updateTask(task);
                 return true;
         }

@@ -19,7 +19,6 @@ import java.sql.SQLException;
 public class EditTaskCommand extends Command {
     public static final String TEXT = "text";
     public static final String DEADLINE = "deadline";
-    public static final String CANCEL = "Отмена";//todo Marat to DB
     public static final String DONE = "Завершить";//todo Marat to DB
     private Task task;
     private int shownDates = 0;
@@ -31,7 +30,7 @@ public class EditTaskCommand extends Command {
 
     @Override
     public boolean execute(Update update, Bot bot) throws SQLException, TelegramApiException {
-        if (updateMessageText.equals(DONE)) {
+        if (updateMessageText.equals(messageDao.getMessageText(132))) {
             bot.sendMessage(new SendMessage()
                     .setText(task.toString())
                     .setChatId(task.getAddedByUserId())
@@ -49,8 +48,7 @@ public class EditTaskCommand extends Command {
             case CHANGE_TYPE:
                 String type = updateMessageText.replace(editText, "");
                 if (type.equals(TEXT)) {
-                    String sendTextText = "Пожалуйста отправьте текст";//todo Marat to DB
-                    sendMessage(sendTextText, getInlineButton(CANCEL));
+                    sendMessage(130, getInlineButton(messageDao.getMessageText(131)));
                     waitingType = WaitingType.NEW_TEXT;
                     return false;
                 }
@@ -60,8 +58,14 @@ public class EditTaskCommand extends Command {
                     return false;
                 }
                 throw new CannotHandleUpdateException();
-            case NEW_TEXT://todo Marat тут принимать не только текст но и аудио
-                task.setText(updateMessageText);
+            case NEW_TEXT:              //  Проверить потом как работает
+                if (updateMessage.getVoice() == null) {
+                    task.setHasAudio(false);
+                    task.setText(updateMessageText);
+                } else {
+                    task.setHasAudio(true);
+                    task.setVoiceMessageId(updateMessage.getVoice().getFileId());
+                }
                 taskDao.updateTask(task);
                 showTaskForChange();
                 return false;
@@ -97,11 +101,10 @@ public class EditTaskCommand extends Command {
         return false;
     }
 
-    private void showTaskForChange() throws TelegramApiException {//todo все кнопки должны быть в одной клаве
-        String taskTextText = "<b>Текст задания:</b>";//todo Marat put it to db
-        String taskDeadlineText = "<b>Крайний срок:</b>";//todo Marat put it to db
-        sendMessage(taskTextText + "\n" + task.getText(), getInlineButton(editText, editText + TEXT));
-        sendMessage(taskDeadlineText + "\n" + task.getDeadline(), getInlineButton(editText, editText + DEADLINE));
+    private void showTaskForChange() throws TelegramApiException {
+        //todo все кнопки должны быть в одной клаве
+        sendMessage(133 + "\n" + task.getText(), getInlineButton(editText, editText + TEXT));
+        sendMessage(134 + "\n" + task.getDeadline(), getInlineButton(editText, editText + DEADLINE));
         sendMessage("Для завершения нажмите эту кнопку", getInlineButton(DONE));//todo Marat to DB
         waitingType = WaitingType.CHANGE_TYPE;
     }
