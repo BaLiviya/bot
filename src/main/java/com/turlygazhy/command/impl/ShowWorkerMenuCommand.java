@@ -87,14 +87,15 @@ public class ShowWorkerMenuCommand extends Command {
                     }
                 }
                 Contact contact = updateMessage.getContact();
-                if (contact == null) {
+                if (contact.getUserID() == null) {
                     sendMessage(103, chatId, bot);      // Данный пользоваетль не зарегистрирован в Telegram
                 } else {
-                    if (userDao.addUser(contact, chatId)) {
-                        sendMessage(5, contact.getUserID(), bot);   // Главное меню для работника
+                    int contactUser = contact.getUserID();
+                    if (userDao.addUser(contact, chatId)){
+                        //   sendMessage(5, contact.getUserID(), bot);   // Главное меню для работника
                         sendMessage(102, chatId, bot);      // Сотрудник добавлен
                         waitingType = WaitingType.COMMAND;
-                    } else {
+                    } if (userDao.getUserByChatId((long) contactUser)==null){
                         sendMessage(109, chatId, bot);      // Данный сотрудник уже добавлен
                     }
                 }

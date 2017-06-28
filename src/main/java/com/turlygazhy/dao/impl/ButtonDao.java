@@ -23,6 +23,9 @@ public class ButtonDao extends AbstractDao {
     }
 
     public Button getButton(String text) throws CommandNotFoundException, SQLException {
+
+
+
         try {
             String selectButtonByText = "SELECT * FROM BUTTON WHERE TEXT = ?";
             int textParameterIndex = 1;

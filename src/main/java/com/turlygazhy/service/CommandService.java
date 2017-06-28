@@ -14,6 +14,8 @@ import java.sql.SQLException;
  * Created by user on 1/2/17.
  */
 public class CommandService extends Service {
+
+
     public Command getCommand(String text) throws SQLException, CommandNotFoundException {
         try {
             if (text.equals("script")) {

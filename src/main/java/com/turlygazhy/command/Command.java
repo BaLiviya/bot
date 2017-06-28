@@ -107,7 +107,8 @@ public abstract class Command {
         sb.append("<b>").append(messageDao.getMessageText(98)).append("</b>").append(task.getDeadline()).append("\n");
         User name = userDao.getUserByChatId(chatId);// Добавил запись чтобы -Отправитель заданий Жайык
         String nameAdmin = name.getName();           // Добавил запись чтобы -Отправитель заданий Жайык
-        sb.append("<b>").append(messageDao.getMessageText(406)).append("</b>").append(nameAdmin);// Добавил запись чтобы -Отправитель заданий Жайык
+        sb.append("<b>").append(messageDao.getMessageText(406)).append("</b>").append(nameAdmin).append("\n");// Добавил запись чтобы -Отправитель заданий Жайык
+        sb.append("<b>").append(messageDao.getMessageText(407)).append("</b>").append(task.getId());// Добавил запись чтобы -Отправитель заданий Жайык
         bot.sendMessage(new SendMessage()
                 .setChatId(task.getUserId())
                 .setText(sb.toString())
@@ -121,7 +122,8 @@ public abstract class Command {
         List<InlineKeyboardButton> row = new ArrayList<>();
         row.add(new InlineKeyboardButton()
                 .setText(buttonDao.getButtonText(65))   // Accept
-                .setCallbackData(buttonDao.getButtonText(65) + " " + task.getId()));
+                .setCallbackData(buttonDao.getButtonText(65)+ " " + task.getId()));
+
         row.add(new InlineKeyboardButton()
                 .setText(buttonDao.getButtonText(66))   // Reject
                 .setCallbackData(buttonDao.getButtonText(66) + " " + task.getId()));

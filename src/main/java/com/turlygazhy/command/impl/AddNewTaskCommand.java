@@ -127,7 +127,7 @@ public class AddNewTaskCommand extends Command {
         Date dateBegins = new Date();
         String saveDataBegin = (dateBeginsFormat.format(dateBegins)).toString();
         task.setDeadline(updateMessageText);
-       task.setDateBegin(saveDataBegin);
+        task.setDateBegin(saveDataBegin);
         task.setDeadline(updateMessageText);
         waitingType = null;
         taskDao.insertTask(task);
