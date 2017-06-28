@@ -104,7 +104,10 @@ public abstract class Command {
         } else {
             sb.append("<b>").append(messageDao.getMessageText(96)).append("</b>").append(task.getText()).append("\n");
         }
-        sb.append("<b>").append(messageDao.getMessageText(98)).append("</b>").append(task.getDeadline());
+        sb.append("<b>").append(messageDao.getMessageText(98)).append("</b>").append(task.getDeadline()).append("\n");
+        User name = userDao.getUserByChatId(chatId);// Добавил запись чтобы -Отправитель заданий Жайык
+        String nameAdmin = name.getName();           // Добавил запись чтобы -Отправитель заданий Жайык
+        sb.append("<b>").append(messageDao.getMessageText(406)).append("</b>").append(nameAdmin);// Добавил запись чтобы -Отправитель заданий Жайык
         bot.sendMessage(new SendMessage()
                 .setChatId(task.getUserId())
                 .setText(sb.toString())

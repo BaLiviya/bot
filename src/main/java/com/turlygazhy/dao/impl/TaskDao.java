@@ -17,7 +17,7 @@ import java.util.List;
 public class TaskDao extends AbstractDao {
     //    private static final String SELECT_TASK = "SELECT * FROM TASK";
     private final Connection connection;
-    private final String INSERT_INTO_TASK = "INSERT INTO TASK VALUES (default, ?, ?, ?, default, ?, ?, ?, null, null, null)"; //
+    private final String INSERT_INTO_TASK = "INSERT INTO TASK VALUES (default, ?, ?, ?, default, ?, ?, ?, null, null, null,?)"; //
 
     public TaskDao(Connection connection) {
         this.connection = connection;
@@ -36,6 +36,7 @@ public class TaskDao extends AbstractDao {
             ps.setString(5, null);
             ps.setString(6, task.getText());
         }
+        ps.setString(7, task.getDateBegin());
         ps.executeUpdate();
         ResultSet rs = ps.getGeneratedKeys();
         if (rs.next()) {

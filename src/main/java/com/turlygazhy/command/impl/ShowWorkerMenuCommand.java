@@ -54,7 +54,9 @@ public class ShowWorkerMenuCommand extends Command {
                     bot.sendMessage(new SendMessage()
                             .setText(sb.toString())
                             .setChatId(chatId)
-                            .setParseMode(ParseMode.HTML));
+                            .setParseMode(ParseMode.HTML)
+                            .setReplyMarkup(keyboardMarkUpDao.select(messageDao.getMessage(400).getKeyboardMarkUpId())));   // добавил кнопки Жайык
+
 
                 }
 

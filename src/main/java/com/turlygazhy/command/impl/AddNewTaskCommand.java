@@ -10,6 +10,9 @@ import org.telegram.telegrambots.api.objects.Update;
 import org.telegram.telegrambots.exceptions.TelegramApiException;
 
 import java.sql.SQLException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 
@@ -120,7 +123,11 @@ public class AddNewTaskCommand extends Command {
             );
             return false;
         }
-
+        DateFormat dateBeginsFormat = new SimpleDateFormat("dd.MM");
+        Date dateBegins = new Date();
+        String saveDataBegin = (dateBeginsFormat.format(dateBegins)).toString();
+        task.setDeadline(updateMessageText);
+       task.setDateBegin(saveDataBegin);
         task.setDeadline(updateMessageText);
         waitingType = null;
         taskDao.insertTask(task);

@@ -368,7 +368,8 @@ public class ShowTasksCommand extends Command {
                     .setText(task.toString())
                     .setParseMode(ParseMode.HTML)
                     .setChatId(chatId)
-                    .setReplyMarkup(keyboardMarkUpDao.select(messageDao.getMessage(129).getKeyboardMarkUpId())));
+                    .setReplyMarkup(keyboardMarkUpDao.select(messageDao.getMessage(81).getKeyboardMarkUpId()))); // Изменить на  getMessage(81)
+
         }
     }
 

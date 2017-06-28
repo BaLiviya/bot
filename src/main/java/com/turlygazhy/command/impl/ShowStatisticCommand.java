@@ -45,6 +45,8 @@ public class ShowStatisticCommand extends Command {
     private List<User> users;
     private Long workerId;
 
+
+
     public ShowStatisticCommand() throws SQLException {
     }
 
@@ -57,7 +59,7 @@ public class ShowStatisticCommand extends Command {
                 sendMessage(10, chatId, bot);   // У вас нет сотрудников
                 return true;
             }
-            showUsers();
+            sendMessage(404, chatId, bot);
             waitingType = WaitingType.CHOOSE_USER;
 
             return false;
@@ -66,7 +68,12 @@ public class ShowStatisticCommand extends Command {
         /*----------------------------Копка отчеты------------------------------------ */
 
         if (updateMessageText.equals(buttonDao.getButtonText(200))) {
-            sendMessage(403, chatId, bot);
+            showUsers();
+
+            return false;
+        }
+
+        if (updateMessageText.equals(buttonDao.getButtonText(204))) {
             sendMessage(401, chatId, bot);
 
             return false;
@@ -100,7 +107,7 @@ public class ShowStatisticCommand extends Command {
         if (m.matches()) {
 
             String txt = updateMessageText.trim();
-            String dateBegin = txt.substring(0,5);
+            String dateBegin = txt.substring(0, 5);
             String dateEnd = txt.substring(txt.length() - 5);
             pieCharts(update, bot, dateBegin, dateEnd);
 
@@ -117,18 +124,17 @@ public class ShowStatisticCommand extends Command {
             Date currentDateDay = new Date();
             int month = Integer.parseInt(dateFormat.format(currentDateMonth));
             String day = (dayFormat.format(currentDateDay));
-            String lastmonth = String.valueOf(month-1);
-            if (lastmonth.length()==1){
-                lastmonth="0" +lastmonth;
-            }else {
-                lastmonth=lastmonth;
+            String lastmonth = String.valueOf(month - 1);
+            if (lastmonth.length() == 1) {
+                lastmonth = "0" + lastmonth;
+            } else {
+                lastmonth = lastmonth;
             }
-            String dateBegin = day+"."+ lastmonth;
+            String dateBegin = day + "." + lastmonth;
 
             DateFormat endDayFormat = new SimpleDateFormat("dd.MM");
             Date current = new Date();
             String dateEnd = (endDayFormat.format(current)).toString();
-            System.out.println(dateBegin);
 
             pieCharts(update, bot, dateBegin, dateEnd);
             return false;
@@ -141,50 +147,19 @@ public class ShowStatisticCommand extends Command {
                     sendMessage(5, chatId, bot);
                     return true;
                 }
+                workerId=null;
                 workerId = userDao.getChatIdByUserId(
                         Long.valueOf(updateMessageText.substring(3))
                 );
                 showUserStatistic(chatId, workerId, bot);
-                waitingType = WaitingType.CHOOSE_STATUS;
                 return false;
 
-            case CHOOSE_STATUS:
-                if (updateMessageText.equals(buttonDao.getButtonText(10))) {
-                    showUsers();
-                    waitingType = WaitingType.CHOOSE_USER;
-                    return false;
-                }
-                Task.Status status = Task.Status.values()[Integer.parseInt(updateMessageText.substring(3))];    // Выбираем статус
-                showUserStatisticByStatus(status, workerId, bot);
-                return false;
 
         }
         return false;
     }
 
 
-
-
-    private void showUserStatisticByStatus(Task.Status status, Long workerId, Bot bot) throws SQLException, TelegramApiException {
-        List<Task> tasks = taskDao.getTasks(workerId, status);
-        StringBuilder sb;
-        for (Task task : tasks) {
-            sb = new StringBuilder();
-            if (task.isHasAudio()) {
-                bot.sendVoice(new SendVoice()
-                        .setVoice(task.getVoiceMessageId())
-                        .setChatId(chatId));
-                sb.append(task.toString()).append("\n");
-            }
-            sb.append(task.toString());
-            bot.sendMessage(new SendMessage()
-                    .setParseMode(ParseMode.HTML)
-                    .setChatId(chatId)
-                    .setText(sb.toString()));
-
-        }
-
-    }
 
 
     private void showUserStatistic(Long chatId, Long workerId, Bot bot) throws SQLException, TelegramApiException {
@@ -224,11 +199,14 @@ public class ShowStatisticCommand extends Command {
                 .setText(sb.toString())
                 .setChatId(chatId)
                 .setParseMode(ParseMode.HTML)
-                .setReplyMarkup(keyboardMarkUpDao.select(messageDao.getMessage(404).getKeyboardMarkUpId())));
+                .setReplyMarkup(keyboardMarkUpDao.select(messageDao.getMessage(104).getKeyboardMarkUpId())));
+        sendMessage(405, chatId, bot);
+
 
     }
 
     private void showUsers() throws SQLException, TelegramApiException {
+        workerId=null;
         sendMessage(104, getWorkersKeyboard(users));      // Выберите сотрудника
     }
 
@@ -238,11 +216,23 @@ public class ShowStatisticCommand extends Command {
 
 
         Connection connection = ConnectionPool.getConnection();
-        PreparedStatement ps = connection.prepareStatement("SELECT STATUS, count(U.ID) * 100 / rownum() AS percent FROM TASK AS T LEFT JOIN USER U ON T.USER_ID = U.CHAT_ID WHERE T.DEADLINE BETWEEN  ? AND   ?\n" +
-                "GROUP BY STATUS");
+        PreparedStatement ps = connection.prepareStatement(
+                "SELECT\n" +
+                        "  STATUS,\n" +
+                        "  count(U.ID) * 100 / rownum() AS percent\n" +
+                        "FROM TASK AS T\n" +
+                        "  LEFT JOIN USER U ON T.USER_ID = U.CHAT_ID\n" +
+                        "WHERE ((T.DEADLINE BETWEEN ? AND ?) OR (T.DATE_BEGIN BETWEEN ? AND ?))\n" +
+                        "      AND (T.STATUS = 0 OR T.STATUS = 1 OR T.STATUS = 3)\n" +
+                        "      AND T.USER_ID = ?\n" +
+                        "GROUP BY STATUS");
 
         ps.setString(1, dateBegin);
         ps.setString(2, dateEnd);
+        ps.setString(3, dateBegin);
+        ps.setString(4, dateEnd);
+        ps.setLong(5, workerId);
+
 
         ResultSet rs = ps.executeQuery();
 

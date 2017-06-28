@@ -22,6 +22,15 @@ public class Task {
     private String report;
     private String dateOfCompletion;
     private String cause;
+    private String dateBegin;
+
+    public String getDateBegin() {
+        return dateBegin;
+    }
+
+    public void setDateBegin(String dateBegin) {
+        this.dateBegin = dateBegin;
+    }
 
     private boolean hasAudio;
 
