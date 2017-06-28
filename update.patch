@@ -1,0 +1,14 @@
+Index: src/main/java/com/turlygazhy/Main.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/main/java/com/turlygazhy/Main.java	(date 1498646791000)
++++ src/main/java/com/turlygazhy/Main.java	(date 1498646904000)
+@@ -26,6 +26,5 @@
+         } catch (TelegramApiRequestException e) {
+             throw new RuntimeException(e);
+         }
+-
+     }
+ }
