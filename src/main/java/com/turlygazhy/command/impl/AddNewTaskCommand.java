@@ -54,7 +54,6 @@ public class AddNewTaskCommand extends Command {
                     return chooseTaskWorker(bot);
                 }
                 return setTaskDeadline(bot);
-
         }
         return false;
     }

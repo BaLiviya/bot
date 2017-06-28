@@ -400,5 +400,4 @@ public abstract class Command {
 
         return row;
     }
-
 }

@@ -97,7 +97,6 @@ public class EditTaskCommand extends Command {
                 showTaskForChange();
                 return false;
         }
-
         return false;
     }
 

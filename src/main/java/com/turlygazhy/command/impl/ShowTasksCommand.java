@@ -279,7 +279,6 @@ public class ShowTasksCommand extends Command {
             taskIndex = tasks.size() - 1;
         }
         sendTask(task, bot);
-
     }
 
     private void sendToAnotherWorker(Bot bot) throws SQLException, TelegramApiException {
