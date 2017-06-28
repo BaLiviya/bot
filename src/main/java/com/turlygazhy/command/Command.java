@@ -108,7 +108,7 @@ public abstract class Command {
         User name = userDao.getUserByChatId(chatId);// Добавил запись чтобы -Отправитель заданий Жайык
         String nameAdmin = name.getName();           // Добавил запись чтобы -Отправитель заданий Жайык
         sb.append("<b>").append(messageDao.getMessageText(406)).append("</b>").append(nameAdmin).append("\n");// Добавил запись чтобы -Отправитель заданий Жайык
-//        sb.append("<b>").append(messageDao.getMessageText(407)).append("</b>").append(task.getId());// Добавил запись чтобы -Отправитель заданий Жайык
+        sb.append("<b>").append(messageDao.getMessageText(407)).append("</b>").append(task.getId());// Добавил запись чтобы -Отправитель заданий Жайык
         bot.sendMessage(new SendMessage()
                 .setChatId(task.getUserId())
                 .setText(sb.toString())
