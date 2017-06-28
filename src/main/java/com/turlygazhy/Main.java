@@ -26,6 +26,5 @@ public class Main {
         } catch (TelegramApiRequestException e) {
             throw new RuntimeException(e);
         }
-
     }
 }
