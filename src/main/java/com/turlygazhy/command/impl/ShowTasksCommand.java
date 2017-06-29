@@ -105,7 +105,6 @@ public class ShowTasksCommand extends Command {
 
                 return false;
 
-
             // Waiting for choose worker
             case TASK_WORKER:
                 List<User> users = userDao.getUsers(chatId);

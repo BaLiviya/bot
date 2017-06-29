@@ -31,6 +31,7 @@ public class EditTaskCommand extends Command {
     @Override
     public boolean execute(Update update, Bot bot) throws SQLException, TelegramApiException {
         if (updateMessageText.equals(messageDao.getMessageText(132))) {
+            informExecutor(task);
             bot.sendMessage(new SendMessage()
                     .setText(task.toString())
                     .setChatId(task.getAddedByUserId())
@@ -80,7 +81,6 @@ public class EditTaskCommand extends Command {
                     );
                     return false;
                 }
-
                 if (updateMessageText.equals(prevText)) {
                     shownDates--;
                     bot.editMessageText(new EditMessageText()
@@ -109,5 +109,4 @@ public class EditTaskCommand extends Command {
         sendMessage(410, getInlineButton(DONE));//Для завершения нажмите эту кнопку
         waitingType = WaitingType.CHANGE_TYPE;
     }
-
 }
