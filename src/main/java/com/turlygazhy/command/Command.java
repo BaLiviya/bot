@@ -400,4 +400,24 @@ public abstract class Command {
 
         return row;
     }
+
+    public org.telegram.telegrambots.api.objects.Message getTaskArkhivKeyboard(Task task, Long chatId) throws SQLException {
+        InlineKeyboardMarkup keyboard = new InlineKeyboardMarkup();
+        List<List<InlineKeyboardButton>> rows = new ArrayList<>();
+        List<InlineKeyboardButton> row = new ArrayList<>();
+        row.add(new InlineKeyboardButton()
+                .setText(buttonDao.getButtonText(206))   // Reject
+                .setCallbackData(buttonDao.getButtonText(207) + task.getId()));
+
+        rows.add(row);
+        keyboard.setKeyboard(rows);
+
+        try {
+            return bot.sendMessage(new SendMessage().setReplyMarkup(keyboard).setChatId(chatId).setText("Храналогия заданий"));
+        } catch (TelegramApiException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
 }

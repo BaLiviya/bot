@@ -131,6 +131,7 @@ public class AddNewTaskCommand extends Command {
         waitingType = null;
         taskDao.insertTask(task);
         informExecutor(task);
+        getTaskArkhivKeyboard(task,chatId);
         sendMessage(79, chatId, bot); // Задание записано
         return true;
     }

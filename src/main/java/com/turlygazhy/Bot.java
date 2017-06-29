@@ -56,7 +56,7 @@ public class Bot extends TelegramLongPollingBot {
 
     public String getBotToken() {
 //        return "302643839:AAEprqcQzVjV2lVSDFTR2ogKN_xRvA-E8QQ";//@Stgcfjkyfdthbot
-        return "349496686:AAE8N-LZzUuVLVYQrOthfSnOQOKEZfw_vCo";
+        return "405718890:AAHr_1a5Fs6OAXYmdsByXBmiffkovU7sbVA";
 //        return "292550349:AAFjomqw9L0X8eMftz0NPVxJ2wh48Vljx84";//bimov_assistant_bot
 //        return "376290788:AAHSivLvfESxnoa0UPdV_QJ0IsAG-H3Tbc8";//@TDNbot
     }

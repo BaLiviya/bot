@@ -25,6 +25,7 @@ public class CommandService extends Service {
             String rejectButton = buttonDao.getButtonText(66);
             String adminAccept = buttonDao.getButtonText(67);
             String adminReject = buttonDao.getButtonText(68);
+            String ArkhivTaskCommand = buttonDao.getButtonText(207);
             if (text.contains(adminAccept)) {
                 int id = Integer.parseInt(text.replace(adminAccept, ""));
                 return new AdminAcceptOrRejectTaskCommand(id);
@@ -40,6 +41,10 @@ public class CommandService extends Service {
             if (text.contains(rejectButton)) {
                 int id = Integer.parseInt(text.replace(rejectButton, ""));
                 return new RejectCommand(id);
+            }
+            if (text.contains(ArkhivTaskCommand)) {
+                int id = Integer.parseInt(text.replace(ArkhivTaskCommand, ""));
+                return new ArkhivTaskCommand(id);
             }
             if (text.contains(changeExecutorText)) {
                 int id = Integer.parseInt(text.replace(changeExecutorText, ""));
