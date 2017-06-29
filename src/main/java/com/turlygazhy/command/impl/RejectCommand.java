@@ -12,44 +12,36 @@ import org.telegram.telegrambots.exceptions.TelegramApiException;
 import java.sql.SQLException;
 
 /**
- * Created by lol on 07.06.2017.
+ * Created by Yerassyl_Turlygazhy on 28-Jun-17.
  */
-public class AdminAcceptOrRejectTaskCommand extends Command {
+public class RejectCommand extends Command {
     private Task task;
 
-    public AdminAcceptOrRejectTaskCommand(int id) throws SQLException {
+    public RejectCommand(int id) throws SQLException {
         task = taskDao.getTask(id);
     }
 
     @Override
     public boolean execute(Update update, Bot bot) throws SQLException, TelegramApiException {
-
-        if (updateMessageText.contains(buttonDao.getButtonText(67))) {     // Принять
-            task.setStatus(Task.Status.DONE);
-            taskDao.updateTask(task);
-            sendMessage(123, task.getAddedByUserId(), bot);
-            return true;
-        }
-
-        if (updateMessageText.contains(buttonDao.getButtonText(68))) {     // Отклонить
+        if (waitingType==null){
             sendMessage(118, chatId, bot);
             waitingType = WaitingType.CAUSE;
             return false;
         }
-
         switch (waitingType) {
             case CAUSE:
-                task.setStatus(Task.Status.REJECTED_BY_ADMIN);
+                task.setStatus(Task.Status.REJECTED);
                 task.setCause(updateMessageText);
-                taskDao.updateTask(task);
                 bot.sendMessage(new SendMessage()
                         .setText(task.toString())
-                        .setChatId(task.getUserId())
-                        .setParseMode(ParseMode.HTML));
-                sendMessage(123, chatId, bot);
+                        .setChatId(task.getAddedByUserId())
+                        .setParseMode(ParseMode.HTML)
+                        .setReplyMarkup(getAfterRejectedKeyboard(task.getId()))
+                );
+                sendMessage(411, chatId, bot);//Отклонение записано
+                taskDao.updateTask(task);
                 return true;
         }
-
         return false;
     }
 }

@@ -122,11 +122,11 @@ public abstract class Command {
         List<InlineKeyboardButton> row = new ArrayList<>();
         row.add(new InlineKeyboardButton()
                 .setText(buttonDao.getButtonText(65))   // Accept
-                .setCallbackData(buttonDao.getButtonText(65)+ " " + task.getId()));
+                .setCallbackData(buttonDao.getButtonText(65) + task.getId()));
 
         row.add(new InlineKeyboardButton()
                 .setText(buttonDao.getButtonText(66))   // Reject
-                .setCallbackData(buttonDao.getButtonText(66) + " " + task.getId()));
+                .setCallbackData(buttonDao.getButtonText(66) + task.getId()));
 
         rows.add(row);
         keyboard.setKeyboard(rows);

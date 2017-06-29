@@ -204,7 +204,7 @@ public class ShowTasksCommand extends Command {
             status = Task.Status.REJECTED;
         } else if (updateMessageText.equals(buttonDao.getButtonText(205))) {  // В процессе
             status = Task.Status.DOING;
-        }else if (updateMessageText.equals(buttonDao.getButtonText(10))) {  // Назад
+        } else if (updateMessageText.equals(buttonDao.getButtonText(10))) {  // Назад
             waitingType = WaitingType.CHOOSE_TASK_TYPE;
             sendMessage(114, chatId, bot);          // Выберите
             return false;
@@ -229,7 +229,7 @@ public class ShowTasksCommand extends Command {
         }
         task = tasks.get(taskIndex);
 //                sendMessage(81, chatId, bot); // Ваши задания
-        sendMessage(81,getInlineKeyboard(tasks));       // Вывод список задании кнопками
+        sendMessage(81, getInlineKeyboard(tasks));       // Вывод список задании кнопками
         waitingType = WaitingType.TASK;
         return false;
     }
@@ -328,7 +328,7 @@ public class ShowTasksCommand extends Command {
                     .setParseMode(ParseMode.HTML)
                     .setChatId(task.getAddedByUserId())
                     .setText(task.toString())
-            .setReplyMarkup(getKeyboard()));
+                    .setReplyMarkup(getKeyboard()));
         }
     }
 
@@ -338,10 +338,10 @@ public class ShowTasksCommand extends Command {
         List<InlineKeyboardButton> row = new ArrayList<>();
         row.add(new InlineKeyboardButton()
                 .setText(buttonDao.getButtonText(65))   // Accept
-                .setCallbackData(buttonDao.getButtonText(67) + " " + task.getId()));
+                .setCallbackData(buttonDao.getButtonText(67) + task.getId()));
         row.add(new InlineKeyboardButton()
                 .setText(buttonDao.getButtonText(66))   // Reject
-                .setCallbackData(buttonDao.getButtonText(68) + " " + task.getId()));
+                .setCallbackData(buttonDao.getButtonText(68) + task.getId()));
 
         rows.add(row);
         keyboard.setKeyboard(rows);
@@ -362,7 +362,7 @@ public class ShowTasksCommand extends Command {
                     .setParseMode(ParseMode.HTML)
                     .setChatId(chatId)
                     .setReplyMarkup(keyboardMarkUpDao.select(messageDao.getMessage(81).getKeyboardMarkUpId())));
-        } else if (taskType == 1){
+        } else if (taskType == 1) {
             bot.sendMessage(new SendMessage()
                     .setText(task.toString())
                     .setParseMode(ParseMode.HTML)
@@ -385,7 +385,7 @@ public class ShowTasksCommand extends Command {
     private ReplyKeyboard getInlineKeyboard(List<Task> tasks) throws SQLException {
         InlineKeyboardMarkup keyboard = new InlineKeyboardMarkup();
         List<List<InlineKeyboardButton>> rows = new ArrayList<>();
-        for (Task task: tasks) {
+        for (Task task : tasks) {
             List<InlineKeyboardButton> row = new ArrayList<>();
             InlineKeyboardButton button = new InlineKeyboardButton();
             button.setText(task.getText());

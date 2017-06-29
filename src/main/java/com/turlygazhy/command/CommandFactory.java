@@ -22,10 +22,6 @@ public class CommandFactory {
                 return new ShowWorkerMenuCommand();
             case SHOW_STATISTIC:
                 return new ShowStatisticCommand();
-            case ACCEPT_OR_REJECT_TASK:
-                return new AcceptOrRejectTaskCommand();
-            case ADMIN_ACCEPT_OR_REJECT_TASK:
-                return new AdminAcceptOrRejectTaskCommand();
             case SHOW_THANKS:
                 return new ShowThanksCommand();
             case ADD_NEW_THANKS:

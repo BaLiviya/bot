@@ -15,11 +15,8 @@ import java.util.Map;
  * Created by Yerassyl_Turlygazhy on 11/24/2016.
  */
 public class Bot extends TelegramLongPollingBot {
-    private Map<Long, Conversation> conversations = new HashMap<Long, Conversation>();
+    private Map<Long, Conversation> conversations = new HashMap<>();
     private static final Logger logger = LoggerFactory.getLogger(Bot.class);
-//    private DaoFactory factory = DaoFactory.getFactory();
-//    private KeyWordDao keyWordDao = factory.getKeyWordDao();
-//    private UserDao userDao = factory.getUserDao();
 
     public void onUpdateReceived(Update update) {
         Message updateMessage = update.getMessage();
@@ -58,9 +55,9 @@ public class Bot extends TelegramLongPollingBot {
     }
 
     public String getBotToken() {
-//        return "405718890:AAHr_1a5Fs6OAXYmdsByXBmiffkovU7sbVA";//@Stgcfjkyfdthbot
-        return "349496686:AAE8N-LZzUuVLVYQrOthfSnOQOKEZfw_vCo";
-//        return "292550349:AAFjomqw9L0X8eMftz0NPVxJ2wh48Vljx84";//bimov_assistant_bot
+//        return "302643839:AAEprqcQzVjV2lVSDFTR2ogKN_xRvA-E8QQ";//@Stgcfjkyfdthbot
+//        return "349496686:AAE8N-LZzUuVLVYQrOthfSnOQOKEZfw_vCo";
+        return "292550349:AAFjomqw9L0X8eMftz0NPVxJ2wh48Vljx84";//bimov_assistant_bot
 //        return "376290788:AAHSivLvfESxnoa0UPdV_QJ0IsAG-H3Tbc8";//@TDNbot
     }
 }

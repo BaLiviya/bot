@@ -10,3 +10,5 @@ update button set text='Уточнить' where id=66
 update message set text='Выполняется' where id=92
 INSERT INTO MESSAGE VALUES(123, 'Задание закрыто', null, 0)
 update message set text='Опишите задание или запишите голосовое сообщение для' where id=76
+
+

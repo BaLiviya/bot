@@ -20,16 +20,8 @@ public class Conversation {
         try {
             org.telegram.telegrambots.api.objects.Message updateMessage = update.getMessage();
             String inputtedText;
-            String[] tmp;
             if (updateMessage == null) {
                 inputtedText = update.getCallbackQuery().getData();
-
-                tmp = inputtedText.split(" ");
-                inputtedText = tmp[0];
-//                try {    // начало
-//                    inputtedText = inputtedText.substring(0, inputtedText.indexOf(" "));//don't use this line
-//                } catch (Exception ignored) {
-//                } // конец
                 updateMessage = update.getCallbackQuery().getMessage();
             } else {
                 inputtedText = updateMessage.getText();

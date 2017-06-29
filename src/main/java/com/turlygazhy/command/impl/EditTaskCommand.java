@@ -19,7 +19,7 @@ import java.sql.SQLException;
 public class EditTaskCommand extends Command {
     public static final String TEXT = "text";
     public static final String DEADLINE = "deadline";
-    public static final String DONE = "Завершить";//todo Marat to DB
+    public final String DONE = messageDao.getMessageText(409);//Завершить
     private Task task;
     private int shownDates = 0;
 
@@ -100,11 +100,13 @@ public class EditTaskCommand extends Command {
         return false;
     }
 
-    private void showTaskForChange() throws TelegramApiException {
+    private void showTaskForChange() throws TelegramApiException, SQLException {
         //todo все кнопки должны быть в одной клаве
-        sendMessage(133 + "\n" + task.getText(), getInlineButton(editText, editText + TEXT));
-        sendMessage(134 + "\n" + task.getDeadline(), getInlineButton(editText, editText + DEADLINE));
-        sendMessage("Для завершения нажмите эту кнопку", getInlineButton(DONE));//todo Marat to DB
+        String taskTextText = messageDao.getMessageText(133);
+        String deadlineText = messageDao.getMessageText(134);
+        sendMessage(taskTextText + "\n" + task.getText(), getInlineButton(editText, editText + TEXT));
+        sendMessage(deadlineText + "\n" + task.getDeadline(), getInlineButton(editText, editText + DEADLINE));
+        sendMessage(410, getInlineButton(DONE));//Для завершения нажмите эту кнопку
         waitingType = WaitingType.CHANGE_TYPE;
     }
 
