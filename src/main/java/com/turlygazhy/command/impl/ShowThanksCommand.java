@@ -98,16 +98,24 @@ public class ShowThanksCommand extends Command {
     }
 
     private boolean getTextThanks(Bot bot) throws SQLException, TelegramApiException {
+        boolean isNotEmpty = true;
         thanks = thanksDao.getThanks(chatId);
         for (Thanks thank: thanks) {
             if (updateMessageText.equals(thank.getDate())) {
                 sendMessage("Ваше благодарность на " + updateMessageText + ": " + thank.getText());
                 sendMessage(5,chatId,bot);
                 return true;
+            } else if(!updateMessageText.equals(thank.getDate())) {
+                isNotEmpty = false;
             } else if (updateMessageText.equals(buttonDao.getButtonText(10))) {      // Назад
-                sendMessage(5, chatId,bot);                                   // Главное меню
-                return true;
+                    sendMessage(5, chatId,bot);                                   // Главное меню
+                    return true;
             }
+        }
+        if (!isNotEmpty) {
+            sendMessage("У вас нету добавленных благодарностей в этот день");
+            sendMessage(5, chatId,bot);                                   // Главное меню
+            return true;
         }
         return false;
     }
