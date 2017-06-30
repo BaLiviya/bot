@@ -1,8 +1,12 @@
 package com.turlygazhy.entity;
 
+import com.turlygazhy.connection_pool.ConnectionPool;
 import com.turlygazhy.dao.DaoFactory;
 import com.turlygazhy.dao.impl.MessageDao;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Objects;
@@ -23,7 +27,6 @@ public class Task {
     private String dateOfCompletion;
     private String cause;
     private String dateBegin;
-
     public String getDateBegin() {
         return dateBegin;
     }
@@ -226,9 +229,26 @@ public class Task {
             User user = DaoFactory.getFactory().getUserDao().getUserByChatId(this.userId);
             if (Objects.equals(user.getChatId(), this.getUserId())) {
                 if (!this.isHasAudio()) {
-                    sb.append("<b>").append(messageDao.getMessageText(96)).append("</b>\n").append(this.getText()).append("\n\n");
+                    sb.append("<b>").append(messageDao.getMessageText(96)).append("</b>");
+
+                    Connection connection = ConnectionPool.getConnection();
+                    PreparedStatement ps = connection.prepareStatement("SELECT TEXTMESSAGE,CAUSE FROM TASKARKHIV WHERE MESSAGEID=?");
+                    ps.setInt(1, this.getId());
+
+
+                    ResultSet rs = ps.executeQuery();
+                    while (rs.next()) {
+
+                        if (rs.getString(2) != null){
+                            sb.append(rs.getString(2)).append("\n");
+                        }else {
+                            sb.append(rs.getString(1)).append("\n");
+                        }
+                    }
+
+                    connection.close();
                 }
-                sb.append("<b>").append(messageDao.getMessageText(97)).append("</b>\n").append(user.getName()).append("\n\n")           // Ответственный
+                sb.append("\n<b>").append(messageDao.getMessageText(97)).append("</b>\n").append(user.getName()).append("\n\n")           // Ответственный
                         .append("<b>").append(messageDao.getMessageText(98)).append("</b>\n").append(this.getDeadline()).append("\n\n") // Дедлайн
                         .append("<b>").append(messageDao.getMessageText(99)).append("</b>\n").append(this.getStatusString()).append("\n\n");           // Статус
                 if (status.equals(Status.WAITING_ADMIN_CONFIRMATION) || status.equals(Status.DONE)) {

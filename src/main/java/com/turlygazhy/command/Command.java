@@ -1,6 +1,7 @@
 package com.turlygazhy.command;
 
 import com.turlygazhy.Bot;
+import com.turlygazhy.connection_pool.ConnectionPool;
 import com.turlygazhy.dao.DaoFactory;
 import com.turlygazhy.dao.GoalDao;
 import com.turlygazhy.dao.ScriptExecutor;
@@ -24,6 +25,9 @@ import org.telegram.telegrambots.api.objects.replykeyboard.buttons.InlineKeyboar
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.exceptions.TelegramApiException;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -102,7 +106,24 @@ public abstract class Command {
                     .setVoice(task.getVoiceMessageId())
                     .setChatId(task.getUserId()));
         } else {
-            sb.append("<b>").append(messageDao.getMessageText(96)).append("</b>").append(task.getText()).append("\n");
+            sb.append("<b>").append(messageDao.getMessageText(96)).append("</b>");
+
+            Connection connection = ConnectionPool.getConnection();
+            PreparedStatement ps = connection.prepareStatement("SELECT TEXTMESSAGE,CAUSE FROM TASKARKHIV WHERE MESSAGEID=?");
+            ps.setInt(1, task.getId());
+
+
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+
+                if (rs.getString(2) != null){
+                    sb.append(rs.getString(2)).append("\n");
+                }else {
+                    sb.append(rs.getString(1)).append("\n");
+                }
+            }
+
+            connection.close();
         }
         sb.append("<b>").append(messageDao.getMessageText(98)).append("</b>").append(task.getDeadline()).append("\n");
         User name = userDao.getUserByChatId(chatId);// Добавил запись чтобы -Отправитель заданий Жайык
@@ -114,6 +135,7 @@ public abstract class Command {
                 .setText(sb.toString())
                 .setReplyMarkup(getTaskKeyboard(task))
                 .setParseMode(ParseMode.HTML));
+
     }
 
     public InlineKeyboardMarkup getTaskKeyboard(Task task) throws SQLException {
@@ -400,24 +422,4 @@ public abstract class Command {
 
         return row;
     }
-
-    public org.telegram.telegrambots.api.objects.Message getTaskArkhivKeyboard(Task task, Long chatId) throws SQLException {
-        InlineKeyboardMarkup keyboard = new InlineKeyboardMarkup();
-        List<List<InlineKeyboardButton>> rows = new ArrayList<>();
-        List<InlineKeyboardButton> row = new ArrayList<>();
-        row.add(new InlineKeyboardButton()
-                .setText(buttonDao.getButtonText(206))   // Reject
-                .setCallbackData(buttonDao.getButtonText(207) + task.getId()));
-
-        rows.add(row);
-        keyboard.setKeyboard(rows);
-
-        try {
-            return bot.sendMessage(new SendMessage().setReplyMarkup(keyboard).setChatId(chatId).setText("Храналогия заданий"));
-        } catch (TelegramApiException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
 }

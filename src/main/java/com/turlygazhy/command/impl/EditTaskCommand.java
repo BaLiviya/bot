@@ -69,6 +69,7 @@ public class EditTaskCommand extends Command {
                 }
                 taskDao.updateTask(task);
                 showTaskForChange();
+
                 return false;
             case TASK_DEADLINE:
                 if (updateMessageText.equals(nextText)) {

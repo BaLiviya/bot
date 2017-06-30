@@ -1,5 +1,6 @@
 package com.turlygazhy.dao.impl;
 
+import com.turlygazhy.connection_pool.ConnectionPool;
 import com.turlygazhy.dao.AbstractDao;
 import com.turlygazhy.entity.Task;
 import org.glassfish.hk2.utilities.reflection.Pretty;
@@ -42,6 +43,8 @@ public class TaskDao extends AbstractDao {
         if (rs.next()) {
             task.setId(rs.getInt(1));
         }
+
+        saveMessageTask(task,true);
         return task;
     }
 
@@ -132,6 +135,8 @@ public class TaskDao extends AbstractDao {
         ps.setString(7, task.getDeadline());
         ps.setInt(8, task.getId());
         ps.execute();
+
+        saveMessageTask(task,false);
     }
 
 
@@ -146,4 +151,39 @@ public class TaskDao extends AbstractDao {
         }
         return null;
     }
+
+    public void saveMessageTask(Task task, boolean insert) throws SQLException {
+
+        String text = null;
+        String cause = null;
+
+        if (insert){
+
+            text = task.getText();
+
+        }else {
+
+            Connection connection = ConnectionPool.getConnection();
+            PreparedStatement lastTaskPs = connection.prepareStatement(
+                    "SELECT * FROM TASKARKHIV WHERE MESSAGEID = ? ORDER BY ID DESC ");
+            lastTaskPs.setInt(1, task.getId());
+            ResultSet resultSet = lastTaskPs.executeQuery();
+            resultSet.next();
+
+            if (task.getText().equals(resultSet.getString(2))){
+                cause = "Уточнение: " + task.getCause();
+            }else {
+                text = "Задания: " +  task.getText();
+            }
+        }
+
+        PreparedStatement ps = connection.prepareStatement(
+                "INSERT INTO TASKARKHIV (TEXTMESSAGE, CAUSE, MESSAGEID) VALUES (?, ?, ?);");
+        ps.setString(1, text);
+        ps.setString(2, cause);
+        ps.setInt(3, task.getId());
+        ps.execute();
+
+    }
+
 }

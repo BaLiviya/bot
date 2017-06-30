@@ -23,6 +23,7 @@ public class RejectCommand extends Command {
 
     @Override
     public boolean execute(Update update, Bot bot) throws SQLException, TelegramApiException {
+
         if (waitingType==null){
             sendMessage(118, chatId, bot);
             waitingType = WaitingType.CAUSE;
@@ -40,8 +41,11 @@ public class RejectCommand extends Command {
                 );
                 sendMessage(411, chatId, bot);//Отклонение записано
                 taskDao.updateTask(task);
+
+
                 return true;
         }
+
         return false;
     }
 }

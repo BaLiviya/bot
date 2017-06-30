@@ -20,7 +20,7 @@ public class ConnectionPool {
 
     //data for settings of connection
     private static final int CONNECTION_NUMBER = 10;
-    private static final String JDBC_URL = "jdbc:h2:~/bimov_prod4";
+    private static final String JDBC_URL = "jdbc:h2:~/bimov_prod42";
 //    private static final String JDBC_URL = "jdbc:h2:~/bimov4";//test
     private static final String DB_LOGIN = "user";
     private static final String DB_PASSWORD = "user";
