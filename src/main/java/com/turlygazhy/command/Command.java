@@ -1,5 +1,6 @@
 package com.turlygazhy.command;
 
+import com.sun.javafx.tk.Toolkit;
 import com.turlygazhy.Bot;
 import com.turlygazhy.connection_pool.ConnectionPool;
 import com.turlygazhy.dao.DaoFactory;
@@ -34,11 +35,14 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Yerassyl_Turlygazhy on 11/27/2016.
  */
 public abstract class Command {
+
+
     protected long id;
     protected long messageId;
 
@@ -65,6 +69,9 @@ public abstract class Command {
     protected Long chatId;
     private Bot bot;
     protected String editText = messageDao.getMessageText(120);
+
+
+
 
     public ReplyKeyboard getAfterRejectedKeyboard(int taskId) throws SQLException {
         InlineKeyboardMarkup keyboard = new InlineKeyboardMarkup();
@@ -106,24 +113,14 @@ public abstract class Command {
                     .setVoice(task.getVoiceMessageId())
                     .setChatId(task.getUserId()));
         } else {
-            sb.append("<b>").append(messageDao.getMessageText(96)).append("</b>");
 
-            Connection connection = ConnectionPool.getConnection();
-            PreparedStatement ps = connection.prepareStatement("SELECT TEXTMESSAGE,CAUSE FROM TASKARKHIV WHERE MESSAGEID=?");
-            ps.setInt(1, task.getId());
+            List< String> text = taskDao.getArkhivTaskText(task);
 
+            for ( String textTask: text) {
 
-            ResultSet rs = ps.executeQuery();
-            while (rs.next()) {
-
-                if (rs.getString(2) != null){
-                    sb.append(rs.getString(2)).append("\n");
-                }else {
-                    sb.append(rs.getString(1)).append("\n");
-                }
+                sb.append(textTask).append("\n");
             }
 
-            connection.close();
         }
         sb.append("<b>").append(messageDao.getMessageText(98)).append("</b>").append(task.getDeadline()).append("\n");
         User name = userDao.getUserByChatId(chatId);// Добавил запись чтобы -Отправитель заданий Жайык

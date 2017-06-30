@@ -3,6 +3,7 @@ package com.turlygazhy.entity;
 import com.turlygazhy.connection_pool.ConnectionPool;
 import com.turlygazhy.dao.DaoFactory;
 import com.turlygazhy.dao.impl.MessageDao;
+import com.turlygazhy.dao.impl.TaskDao;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -27,9 +28,18 @@ public class Task {
     private String dateOfCompletion;
     private String cause;
     private String dateBegin;
+
     public String getDateBegin() {
         return dateBegin;
     }
+
+    private Connection connection;
+
+    public Task (Connection connection) {
+        this.connection = connection;
+    }
+
+
 
     public void setDateBegin(String dateBegin) {
         this.dateBegin = dateBegin;
@@ -229,7 +239,6 @@ public class Task {
             User user = DaoFactory.getFactory().getUserDao().getUserByChatId(this.userId);
             if (Objects.equals(user.getChatId(), this.getUserId())) {
                 if (!this.isHasAudio()) {
-                    sb.append("<b>").append(messageDao.getMessageText(96)).append("</b>");
 
                     Connection connection = ConnectionPool.getConnection();
                     PreparedStatement ps = connection.prepareStatement("SELECT TEXTMESSAGE,CAUSE FROM TASKARKHIV WHERE MESSAGEID=?");
@@ -247,6 +256,7 @@ public class Task {
                     }
 
                     connection.close();
+
                 }
                 sb.append("\n<b>").append(messageDao.getMessageText(97)).append("</b>\n").append(user.getName()).append("\n\n")           // Ответственный
                         .append("<b>").append(messageDao.getMessageText(98)).append("</b>\n").append(this.getDeadline()).append("\n\n") // Дедлайн

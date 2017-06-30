@@ -3,14 +3,12 @@ package com.turlygazhy.dao.impl;
 import com.turlygazhy.connection_pool.ConnectionPool;
 import com.turlygazhy.dao.AbstractDao;
 import com.turlygazhy.entity.Task;
-import org.glassfish.hk2.utilities.reflection.Pretty;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by lol on 25.05.2017.
@@ -18,11 +16,14 @@ import java.util.List;
 public class TaskDao extends AbstractDao {
     //    private static final String SELECT_TASK = "SELECT * FROM TASK";
     private final Connection connection;
-    private final String INSERT_INTO_TASK = "INSERT INTO TASK VALUES (default, ?, ?, ?, default, ?, ?, ?, null, null, null,?)"; //
+    private final String INSERT_INTO_TASK = "INSERT INTO TASK VALUES (default, ?, ?, ?, default, ?, ?, ?, NULL, NULL, NULL,?)"; //
 
     public TaskDao(Connection connection) {
         this.connection = connection;
     }
+
+
+
 
     public Task insertTask(Task task) throws SQLException {
         PreparedStatement ps = connection.prepareStatement(INSERT_INTO_TASK, PreparedStatement.RETURN_GENERATED_KEYS);
@@ -44,7 +45,7 @@ public class TaskDao extends AbstractDao {
             task.setId(rs.getInt(1));
         }
 
-        saveMessageTask(task,true);
+        saveMessageTask(task, true);
         return task;
     }
 
@@ -136,7 +137,7 @@ public class TaskDao extends AbstractDao {
         ps.setInt(8, task.getId());
         ps.execute();
 
-        saveMessageTask(task,false);
+        saveMessageTask(task, false);
     }
 
 
@@ -157,23 +158,24 @@ public class TaskDao extends AbstractDao {
         String text = null;
         String cause = null;
 
-        if (insert){
 
-            text = task.getText();
+        if (insert) {
 
-        }else {
+            text = "Задания: " + task.getText();
 
-            Connection connection = ConnectionPool.getConnection();
+        } else {
+
             PreparedStatement lastTaskPs = connection.prepareStatement(
                     "SELECT * FROM TASKARKHIV WHERE MESSAGEID = ? ORDER BY ID DESC ");
             lastTaskPs.setInt(1, task.getId());
             ResultSet resultSet = lastTaskPs.executeQuery();
             resultSet.next();
+            String textTask = "Задания: " + task.getText();
 
-            if (task.getText().equals(resultSet.getString(2))){
+            if (textTask.equals(resultSet.getString(2))) {
                 cause = "Уточнение: " + task.getCause();
-            }else {
-                text = "Задания: " +  task.getText();
+            } else {
+                text = "Задания: " + task.getText();
             }
         }
 
@@ -184,6 +186,29 @@ public class TaskDao extends AbstractDao {
         ps.setInt(3, task.getId());
         ps.execute();
 
+    }
+
+
+
+    public List<String> getArkhivTaskText(Task task) throws SQLException {
+
+        PreparedStatement ps = connection.prepareStatement("SELECT TEXTMESSAGE,CAUSE FROM TASKARKHIV WHERE MESSAGEID=?");
+        ps.setInt(1, task.getId());
+        ps.execute();
+
+        List<String> list = new ArrayList<String>();
+        ResultSet rs = ps.executeQuery();
+        while (rs.next()) {
+
+            if (rs.getString(2) != null) {
+                list.add(rs.getString(2));
+            } else {
+                list.add(rs.getString(1));
+
+            }
+        }
+
+        return list;
     }
 
 }

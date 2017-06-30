@@ -304,5 +304,3 @@ public class ShowStatisticCommand extends Command {
 
 
 }
-
-
